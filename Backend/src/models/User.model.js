@@ -46,15 +46,14 @@ userschema.methods.generateAccessToken = function () {
   return Jwt.sign(
    {
     _id: this._id, // here id(everything) is coming from database,
-    emial: this.emial,
-    username: this.username,
+    email: this.email,
     FullName: this.FullName,
    },
    process.env.ACCESS_TOKEN_SECRET,
    {
-     expiredin : process.env.ACCESS_TOKEN_EXPIRY
+    expiresIn : process.env.ACCESS_TOKEN_EXPIRY
    }
-  );
+  )
 };
 
 // now we are genrating refresh token
@@ -66,9 +65,9 @@ userschema.methods.generateRefreshToken = function () {
      },
      process.env.REFRESH_TOKEN_SECRET,
      {
-       expiredin : process.env.REFRESH_TOKEN_EXPIRY
+      expiresIn : process.env.REFRESH_TOKEN_EXPIRY
      }
-    );
+    )
   };
 
 

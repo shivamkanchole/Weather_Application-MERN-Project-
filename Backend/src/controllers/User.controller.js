@@ -45,6 +45,26 @@ const RegisterUser = asyncHandler(async (req, res) => {
 
 });
 
+const GenerateAccessAndRefreshTokens = async (userid) => {
+  try {
+    const user = await User.findById(userid);
+    const accesstoken = user.generateAccessToken();
+    const refreshtoken = user.generateRefreshToken();
+
+    user.refreshToken = refreshtoken
+    await user.save({ validateBeforeSave: false })
+
+    return { accesstoken, refreshtoken };
+  } catch (error) {
+    throw new ApiError(
+      500,
+      {},
+      "something went wrong while generating access and refresh tokne "
+    );
+  }
+};
+
+
 const LoginUser = asyncHandler(async(req,res) =>{
   const {email, password} = req.body
   // console.log(email)
@@ -74,14 +94,23 @@ const LoginUser = asyncHandler(async(req,res) =>{
     .status(400)
     .json(new ApiError(400,{},"Wrong Password"))
   }
+
+  const { accesstoken, refreshtoken } = await GenerateAccessAndRefreshTokens( user._id);
+
   
   const loggedinuser = await User.findById(user._id).select(
-    "-password"
+    "-password -refreshToken"
   );  
-
+  
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
 
   return res
   .status(200)
+  .cookie("accesstoken", accesstoken, options)
+  .cookie("refreshtoken", refreshtoken, options)
   .json(new apiResponse(200,loggedinuser,"login successfull"))
 })
 
