@@ -2,13 +2,15 @@ import React, { useState } from "react";
 import { createBrowserHistory } from "history";
 import axios from "axios";
 import { Widget } from "./Widget.jsx";
-import { Input } from "./Input.jsx";
+import { useSelector } from "react-redux";
+import {NavLink} from 'react-router-dom'
 
 const CityComponent = () => {
   const [formData, setFormData] = useState({
     id: "",
     city: "",
   });
+  const Isuserloggedin = useSelector((state) => state.auth.status);
   let history = createBrowserHistory();
   const [CityDetails, setCityDetails] = useState([]);
   const [display, setdisplay] = useState("hidden");
@@ -63,55 +65,78 @@ const CityComponent = () => {
   };
 
   return flag ? (
-    <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-md shadow-md">
-      <div
-        className={`${
-          ErrorMsg.length > 0 ? "block" : "hidden"
-        } text-red-600 bg-red-100 border border-red-300 p-3 rounded-md`}
-      >
-        {ErrorMsg}
-      </div>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label
-            htmlFor="id"
-            className="block text-sm font-medium text-gray-600"
-          >
-            ID:
-          </label>
-          <input
-            type="text"
-            id="id"
-            name="id"
-            value={formData.id}
-            onChange={handleChange}
-            className="mt-1 p-2 w-full border rounded-md"
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            htmlFor="city"
-            className="block text-sm font-medium text-gray-600"
-          >
-            City:
-          </label>
-          <input
-            type="text"
-            id="city"
-            name="city"
-            value={formData.city}
-            onChange={handleChange}
-            className="mt-1 p-2 w-full border rounded-md"
-          />
-        </div>
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
+    Isuserloggedin ? (
+      <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-md shadow-md">
+        <div
+          className={`${
+            ErrorMsg.length > 0 ? "block" : "hidden"
+          } text-red-600 bg-red-100 border border-red-300 p-3 rounded-md`}
         >
-          Fatch Data
-        </button>
-      </form>
-    </div>
+          {ErrorMsg}
+        </div>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label
+              htmlFor="id"
+              className="block text-sm font-medium text-gray-600"
+            >
+              ID:
+            </label>
+            <input
+              type="text"
+              id="id"
+              name="id"
+              value={formData.id}
+              onChange={handleChange}
+              className="mt-1 p-2 w-full border rounded-md"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="city"
+              className="block text-sm font-medium text-gray-600"
+            >
+              City:
+            </label>
+            <input
+              type="text"
+              id="city"
+              name="city"
+              value={formData.city}
+              onChange={handleChange}
+              className="mt-1 p-2 w-full border rounded-md"
+            />
+          </div>
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
+          >
+            Fatch Data
+          </button>
+        </form>
+      </div>
+    ) : (
+      <div className=" bg-white rounded-md shadow-md p-8 text-center mt-20">
+        <h2 className="text-2xl font-semibold mb-4">Please Login</h2>
+        <p className="text-gray-600 mb-4">
+          To access the features, please log in to your account.
+        </p>
+
+        <NavLink
+          to="/login"
+          className="bg-blue-500 text-white px-4 py-2 rounded-full"
+        >
+          Login
+        </NavLink>
+
+        <p className="mt-4 text-sm text-gray-500">
+          Don't have an account?{"  "}
+          <NavLink to="/registration" className="text-blue-500">
+            Sign up
+          </NavLink>
+        </p>
+      </div>
+    )
   ) : (
     <div className=" flex justify-center mt-10">
       {CityDetails.map((field, index) => (
