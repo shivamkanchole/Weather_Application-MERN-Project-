@@ -60,7 +60,7 @@ function Form({ setfatcheddata }) {
         type="submit"
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold w-96 flex justify-center mt-4 py-2 px-4 rounded md:w-full "
       >
-        {flag ? `Fatching Data...` : "Submit"}
+        {flag ? `Fetching Data...` : "Submit"}
       </button>
     </form>
   );
